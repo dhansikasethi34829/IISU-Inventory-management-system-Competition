@@ -454,37 +454,46 @@ export const removeInventoryItem = async (req, res) => {
 };
 
 // removed RequestInventoryItem  //
-export const removeRequestInventory = async (req, res) => {
+export const deleteRequestInventory = async (req, res) => {
   try {
     const { category, itemName } = req.body;
+
     if (!category || !itemName) {
       return res
         .status(400)
         .json({ message: "Category and Item Name are required." });
     }
+
     const inventoryCategory = await inventoryEntries.findOne({ category });
+
     if (!inventoryCategory) {
       return res.status(404).json({ message: "Category not found." });
     }
-    const itemIndex = inventoryCategory.items.findIndex(
-      (item) => item.name === itemName
-    );
-    const removedItem = inventoryCategory.items[itemIndex];
-    inventoryCategory.items.splice(itemIndex, 1);
-    await inventoryCategory.save();
-    const newRemovedItem = new removedInventory({
-      itemName: removedItem.name,
-      category: category,
-    });
 
-    await newRemovedItem.save();
-    res
-      .status(200)
-      .json({
-        message: "Item removed successfully and stored in removed inventory!",
-      });
+    // Filter out the item with the given itemName
+    const updatedItems = inventoryCategory.requestItems.filter(
+      (item) => item.itemName !== itemName
+    );
+
+    if (updatedItems.length === inventoryCategory.requestItems.length) {
+      return res
+        .status(404)
+        .json({ message: "Item not found in the specified category." });
+    }
+
+    // Update the category with the new list of items
+    inventoryCategory.requestItems = updatedItems;
+
+    // If no items are left in the category, delete the whole category
+    if (updatedItems.length === 0) {
+      await inventoryEntries.deleteOne({ category });
+    } else {
+      await inventoryCategory.save();
+    }
+
+    res.status(200).json({ message: "Inventory item deleted successfully." });
   } catch (error) {
-    console.error("Error removing inventory item:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error deleting inventory:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };

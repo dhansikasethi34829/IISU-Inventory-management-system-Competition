@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Instance from "../AxiosConfig";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 function AdminRequestTable() {
   const [viewRequestInventory, setViewRequestInventory] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchViewRequestInventory = async () => {
@@ -16,22 +20,68 @@ function AdminRequestTable() {
     };
 
 
-    const handleDelete = async (category, itemName) => {
-      try {
-        const response = await Instance.delete("/add/removeRequestInventory", {
-          data: { category, itemName },
-        });
-        alert(response.data.message);
-        fetchData();
-      } catch (error) {
-        console.error("Error deleting inventory item:", error);
-        alert("Failed to delete item");
-      }
-    };
-
 
     fetchViewRequestInventory();
   }, []);
+
+
+  const handleApprove = async (e) => {
+    
+    try {
+      toast.success("Inventory Approved successfully!");
+      setTimeout(() => {
+        window.location.reload();
+        navigate("/request-inventory-table");
+      }, 8000);
+    } catch (error) {
+      console.error("Approve  Inventory error:", error.response?.data || error.message);
+      toast.error("Error approving inventory.");
+    }
+  };
+
+
+
+  const handleDecline = async (category, itemName) => {
+    try {
+      await Instance.delete(`/add/deleteRequestInventory`, {
+        data: { category, itemName } // send data in the request body
+      });
+      toast.success("Inventory Declined successfully!");
+  
+      // Update state to remove the declined item
+      setViewRequestInventory((prevInventory) =>
+        prevInventory.map((cat) => {
+          if (cat.category === category) {
+            return {
+              ...cat,
+              requestItems: cat.requestItems.filter(
+                (item) => item.itemName !== itemName
+              ),
+            };
+          }
+          return cat;
+        }).filter(cat => cat.requestItems.length > 0) // Remove empty categories
+      );
+    } catch (error) {
+      console.error("Error deleting inventory item:", error);
+      toast.error("Error declining inventory");
+    }
+  };
+  
+
+
+
+  // const handleDecline = async (category, itemName) => {
+  //   try {
+  //     toast.success("Inventory Decline successfully!");
+
+  //   } catch (error) {
+  //     console.error("Error deleting inventory item:", error);
+  //     alert("Failed to delete item");
+  //     toast.error("Error decline inventory")
+  //   }
+  // };
+
   console.log(viewRequestInventory);
 
   const formatDate = (isoDate) => {
@@ -43,7 +93,9 @@ function AdminRequestTable() {
   };
 
   return (
-    <div className="wrapper">
+    <>
+      <ToastContainer />
+      <div className="wrapper">
       <div className="main flex items-start justify-center"></div>
       <div className="mt-10 text-black p-10">
         <h2 className="text-3xl font-bold text-center text-blue-900">
@@ -102,16 +154,20 @@ function AdminRequestTable() {
                       </td>
 
                       <td className="border border-blue-900 px-1 py-2 ">
-                      <button className="bg-green-600 text-white mx-1 px-3 py-2 rounded-md"  
-                      onClick={() =>
-                            navigate("/request-inventory-table", {
-                              state: { category: category.category, ...item },
-                            })
-                          }>
+                      <button className="bg-green-600 text-white mx-1 px-3 py-2 rounded-md" 
+                      onClick={() => handleApprove()} 
+                      // onClick={() =>
+                      //       navigate("/request-inventory-table", {
+                      //         state: { category: category.category, ...item },
+                      //       })
+                      //     }
+                      >
                         Approve
                       </button>
 
-                      <button className="bg-red-600 text-white mx-1 px-3 py-2 rounded-md" onClick={() => handleDelete(category.category, item.itemName)}>
+                      <button className="bg-red-600 text-white mx-1 px-3 py-2 rounded-md" 
+                       onClick={() => handleDecline(category.category, item.itemName)}
+                      >
                          Decline
                       </button>
                       </td>
@@ -131,7 +187,8 @@ function AdminRequestTable() {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

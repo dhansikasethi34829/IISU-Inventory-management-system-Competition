@@ -10,7 +10,7 @@ import {
   restockInventory,
   requestInventoryFaculty,
   getViewRequestInventory,
-  removeRequestInventory,
+  deleteRequestInventory,
 } from "../controllers/inventoryController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
@@ -70,8 +70,8 @@ router.get(
   authMiddleware("facultyToken", "adminToken"),
   getInventory
 );
+router.delete("/deleteRequestInventory",
+  authMiddleware("adminToken"),
+  deleteRequestInventory);
 
-router.delete("/removeRequestInventory",
-  authMiddleware("storemanToken"),
-  removeRequestInventory);
 export default router;
