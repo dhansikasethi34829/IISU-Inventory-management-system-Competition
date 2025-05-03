@@ -13,14 +13,13 @@ const authMiddleware =
       if (tokenKey === "adminToken") token = req.cookies.adminToken;
       else if (tokenKey === "facultyToken") token = req.cookies.facultyToken;
       else if (tokenKey === "storemanToken") token = req.cookies.storemanToken;
-      else if (tokenKey === "accountantToken")
-        token = req.cookies.accountantToken;
-
+      else if (tokenKey === "accountantToken") token = req.cookies.accountantToken;
       if (token) {
         try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET);
           req.user = decoded;
           return next();
+          console.log(token);
         } catch (error) {
           continue;
         }
