@@ -50,8 +50,13 @@ function Dashboard() {
                   Inventory Table
                 </li>
               </Link>
-              <Link to="/inventory">
+              {/* <Link to="/inventory">
                 <li className={getNavLinkClass("/inventory")}>
+                  Add Inventory
+                </li>
+              </Link> */}
+               <Link to="/purchase">
+                <li className={getNavLinkClass("/purchase")}>
                   Add Inventory
                 </li>
               </Link>
@@ -64,6 +69,9 @@ function Dashboard() {
                 <li className={getNavLinkClass("/issue-inventory-table")}>
                   Issued Inventories
                 </li>
+              </Link>
+              <Link to="/restock-inventory">
+                <li className={getNavLinkClass("/restock-inventory")}>Restock Inventory</li>
               </Link>
               <Link to="/threshold">
                 <li className={getNavLinkClass("/threshold")}>Threshold</li>

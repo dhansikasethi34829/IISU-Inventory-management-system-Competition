@@ -13,6 +13,7 @@ import {
   deleteRequestInventory,
 } from "../controllers/inventoryController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import upload from "../middlewares/multer.js";
 const router = express.Router();
 
 router.post(
@@ -23,6 +24,7 @@ router.post(
 router.post(
   "/purchase",
   authMiddleware( "adminToken","storemanToken",),
+  upload.single("image"), // Multer middleware
   purchaseInventory
 );
 router.get(
@@ -53,6 +55,7 @@ router.delete(
 router.put(
   "/restock-inventory",
   authMiddleware("storemanToken", "adminToken"),
+  // upload.single("billImage"), // Multer middleware
   restockInventory
 );
 router.post(

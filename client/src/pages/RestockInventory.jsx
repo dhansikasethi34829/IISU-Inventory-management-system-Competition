@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Instance from "../AxiosConfig";
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css'; // Import styles
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import styles
 
 
 
@@ -23,7 +23,7 @@ const [updatedBill, setUpdatedBill] = useState("");
 
   useEffect(() => {
     if (!category || !itemName) {
-      // toast.error("Invalid inventory item.");
+      toast.error("Invalid inventory item.");
       // navigate("/inventory-table");
     }
   }, [category, itemName, navigate]);
@@ -45,7 +45,7 @@ const [updatedBill, setUpdatedBill] = useState("");
        
       });
 
-      // toast.success("Inventory Restocked successfully!");
+      toast.success("Inventory Restocked successfully!");
       setInterval(() => {
         window.location.reload();
         navigate("/inventory-table");
@@ -53,7 +53,7 @@ const [updatedBill, setUpdatedBill] = useState("");
      
     } catch (error) {
       console.error("Restock Inventory error:", error.response?.data || error.message);
-      // toast.error("Error restocking inventory.");
+      toast.error("Error restocking inventory.");
     }
   };
 
@@ -74,7 +74,7 @@ const [updatedBill, setUpdatedBill] = useState("");
                   type="text"
                   placeholder="Item Name"
                   value={itemName}
-                  disabled
+                  // disabled
                 />
               </div>
               <div className="font-bold text-blue-900">
@@ -84,7 +84,7 @@ const [updatedBill, setUpdatedBill] = useState("");
                   className="border-2 my-2 px-5 py-2 w-full rounded-md text-gray-500"
                   value={category}
                   placeholder="Selected Category"
-                  disabled
+                  // disabled
                 />
                  
               </div>
@@ -181,12 +181,6 @@ const [updatedBill, setUpdatedBill] = useState("");
                   required
                 />
               </div>
-
-
-             
-
-
-
               <div className="font-bold text-blue-900">
                 <label>Bill Date</label>
                 <input
@@ -208,8 +202,6 @@ const [updatedBill, setUpdatedBill] = useState("");
                   required
                 />
               </div>
-
-
 
             </div>
 

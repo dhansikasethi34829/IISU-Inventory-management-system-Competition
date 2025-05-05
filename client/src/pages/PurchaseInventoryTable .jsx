@@ -104,7 +104,6 @@ const PurchaseInventoryTable = () => {
                 <th className="border px-4 py-2">Bill No</th>
                 <th className="border px-4 py-2">Party Name</th>
                 <th className="border px-4 py-2">Bill Date</th>
-
                 <th className="border px-4 py-2">Status</th>
                 <th className="border px-4 py-2">Purchase Details</th>
               

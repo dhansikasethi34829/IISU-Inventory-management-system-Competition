@@ -9,9 +9,13 @@ import adminRoutes from "./routes/adminRoutes.js";
 import facultyAuth from "./routes/facultyAuth.js";
 import accountantRoutes from "./routes/accountantRoutes.js";
 import storemanRoutes from "./routes/storemanRoute.js";
+import cloudinary from "cloudinary";
 
 
 dotenv.config();
+cloudinary.config({
+  secure: true
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;

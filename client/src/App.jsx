@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext"; 
-// import AddNewInventory from "./pages/AddNewInventory.jsx";
-import AddNewInventory from "./pages/AddInventory.jsx";
+import AddNewInventory from "./pages/AddNewInventory.jsx";
+// import AddNewInventory from "./pages/AddInventory.jsx";
 import RestockInventory from "./pages/RestockInventory.jsx";
 import InventoryTable from "./pages/InventoryTable";
 import ChangeInventory from "./pages/ChangeInventory";
@@ -16,8 +16,6 @@ import Summary from "./pages/Summary";
 import ThreShold from "./pages/Threshold";
 import Login from "./pages/Login";
 import First from "./pages/First";
-import FacultyLogin from "./pages/FacultyLogin.jsx";
-import FacultySignUp from "./pages/FacultySignUp.jsx";
 import ProtectedRoute from "./components/ProtectedRouter";
 import SignUp from "./pages/SignUp.jsx";
 import Notify from "./pages/Notify.jsx";
@@ -38,39 +36,27 @@ const router = createBrowserRouter([
     children: [
       { path: "/login", element: <Login /> },
       { path: "/signUp", element: <SignUp /> },
-
-
-      // {
-      //   path: "/facultylogin",
-      //   element: (
-      //     <ProtectedRoute>
-      //       <FacultyLogin/>
-      //     </ProtectedRoute>
-      //   ),
-      // },
-
-
-      // {
-      //   path: "/facultysignUp",
-      //   element: (
-      //     <ProtectedRoute>
-      //       <FacultySignUp/>
-      //     </ProtectedRoute>
-      //   ),
-      // },
+    // {
+    //     path: "/inventory",
+    //     element: (
+    //       <ProtectedRoute allowedRoles={["admin","storeman"]}>
+    //         <AddNewInventory />
+    //       </ProtectedRoute>
+    //     ),
+    //   },
     {
-        path: "/inventory",
-        element: (
-          <ProtectedRoute>
-            <AddNewInventory allowedRoles={["storeman"]}/>
-          </ProtectedRoute>
-        ),
-      },
+      path: "/purchase",
+      element: (
+        <ProtectedRoute allowedRoles={["admin","storeman"]}>
+          <AddNewInventory />
+        </ProtectedRoute>
+      ),
+    },
       {
         path: "/restock-inventory",
         element: (
-          <ProtectedRoute>
-            <RestockInventory allowedRoles={["admin", "storeman"]}/>
+          <ProtectedRoute allowedRoles={["admin", "storeman"]}>
+            <RestockInventory />
           </ProtectedRoute>
         ),
       },
@@ -78,7 +64,7 @@ const router = createBrowserRouter([
       {
         path: "/inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "storeman","faculty","accountant"]}>
             <InventoryTable />
           </ProtectedRoute>
         ),
@@ -86,7 +72,7 @@ const router = createBrowserRouter([
       {
         path: "/issue-inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "storeman"]}>
             <IssueInventoryTable />
           </ProtectedRoute>
         ),
@@ -94,7 +80,7 @@ const router = createBrowserRouter([
       {
         path: "/request-inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "storeman","faculty"]}>
             <RequestInventoryTable />
           </ProtectedRoute>
         ),
@@ -102,7 +88,7 @@ const router = createBrowserRouter([
       {
         path: "/change-inventory",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "storeman"]}>
             <ChangeInventory />
           </ProtectedRoute>
         ),
@@ -110,7 +96,7 @@ const router = createBrowserRouter([
       {
         path: "/issue-inventory",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman"]}>
             <IssueInventory />
           </ProtectedRoute>
         ),
@@ -118,7 +104,7 @@ const router = createBrowserRouter([
       {
         path: "/return-inventory",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <ReturnInventory />
           </ProtectedRoute>
         ),
@@ -126,7 +112,7 @@ const router = createBrowserRouter([
       {
         path: "/purchase-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman"]}>
             <PurchaseTable />
           </ProtectedRoute>
         ),
@@ -134,7 +120,7 @@ const router = createBrowserRouter([
       {
         path: "/purchase-inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman"]}>
             <PurchaseInventoryTable />
           </ProtectedRoute>
         ),
@@ -143,7 +129,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-issue-inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <FacultyIssueInventoryTable />
         </ProtectedRoute>
         ),
@@ -152,7 +138,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-view-request-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <FacultyViewRequestTable />
         </ProtectedRoute>
         ),
@@ -161,7 +147,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-request-inventory",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <FacultyRequestInventory />
         </ProtectedRoute>
         ),
@@ -169,7 +155,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-notification",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <FacultyNotification/>
         </ProtectedRoute>
         ),
@@ -178,7 +164,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-return-inventory",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
           <FacultyReturnInventory />
         </ProtectedRoute>
         ),
@@ -187,7 +173,7 @@ const router = createBrowserRouter([
       {
           path: "/notify",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["admin","faculty"]}>
               <Notify />
             </ProtectedRoute>
           ),
@@ -195,7 +181,7 @@ const router = createBrowserRouter([
          {
           path: "/faculty-request-inventory-table",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["admin","faculty"]}>
               <FacultyRequestInventoryTable />
             </ProtectedRoute>
           ),
@@ -205,7 +191,7 @@ const router = createBrowserRouter([
          {
           path: "/admin-request-table",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["admin"]}>
               <AdminRequestTable />
             </ProtectedRoute>
           ),
@@ -215,7 +201,7 @@ const router = createBrowserRouter([
         {
           path: "/admin-notifications",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["admin"]}>
               <AdminNotifications />
             </ProtectedRoute>
           ),
@@ -224,7 +210,7 @@ const router = createBrowserRouter([
       {
         path: "/report",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman","accountant"]}>
             <Report />
           </ProtectedRoute>
         ),
@@ -232,7 +218,7 @@ const router = createBrowserRouter([
       {
         path: "/summary",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman","accountant"]}>
             <Summary />
           </ProtectedRoute>
         ),
@@ -240,7 +226,7 @@ const router = createBrowserRouter([
       {
         path: "/threshold",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","storeman"]}>
             <ThreShold />
           </ProtectedRoute>
         ),
@@ -248,7 +234,7 @@ const router = createBrowserRouter([
       {
         path: "/faculty-inventory-table",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin","faculty"]}>
             <FacultyInventoryTable />
           </ProtectedRoute>
         ),

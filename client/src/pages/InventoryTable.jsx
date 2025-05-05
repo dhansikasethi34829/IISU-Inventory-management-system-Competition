@@ -133,7 +133,7 @@ const InventoryTable = () => {
                 <th className="border px-4 py-2">Item Name</th>
                 <th className="border px-4 py-2">Quantity</th>
                 <th className="border px-4 py-2">Status</th>
-                {/* <th className="border px-4 py-2">Purchase Details</th> */}
+                <th className="border px-4 py-2">Purchase Details</th>
                 <th className="border px-4 py-2">Actions</th>
               </tr>
             </thead>
@@ -164,7 +164,7 @@ const InventoryTable = () => {
                       >
                         {item.status}
                       </td>
-                      {/* <td className="border px-4 py-2 text-black">
+                      <td className="border px-4 py-2 text-black">
                         <button
                           className="bg-gray-700 text-white mx-2 px-5 py-2 rounded-md"
                           onClick={() =>
@@ -175,7 +175,7 @@ const InventoryTable = () => {
                         >
                           View
                         </button>
-                      </td> */}
+                      </td>
                       <td className="border px-4 py-2 text-black">
                         <button
                           className="bg-yellow-500 text-white mx-1 px-5 py-2 rounded-md"

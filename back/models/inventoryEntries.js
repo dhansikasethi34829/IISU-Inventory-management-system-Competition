@@ -74,8 +74,6 @@ const requestDeclineItemsSchema = new mongoose.Schema({
 
 
 const purchaseItemSchema = new mongoose.Schema({
-  itemName: String,
-  threshold: Number,
   billNo: String,
   partyName: String,
   billDate: Date,
@@ -88,7 +86,6 @@ const purchaseItemSchema = new mongoose.Schema({
     enum: ["Available", "Low Stock","Out of Stock"],
   },
    purchaseDate: { type: Date, default: Date.now },
-
   bill: String, // Assuming this is a file path or URL to the bill document
 });
 
@@ -110,7 +107,7 @@ const inventorySchema = new mongoose.Schema({
   requestItems:[requestItemSchema],
   requestApprovedItems:[requestItemSchema],
   requestRejectedItems:[requestItemSchema],
-  // purchaseItems:[purchaseItemSchema],
+  purchaseItems:[purchaseItemSchema],
 });
 
 const inventoryEntries = mongoose.model("Inventory", inventorySchema);

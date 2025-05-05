@@ -54,102 +54,100 @@ export const getInventory = async (req, res) => {
 export const purchaseInventory = async (req, res) => {
   try {
     const {
+      category,
       itemName,
-      threshold,
       billNo,
       partyName,
       billDate,
-      pricePerUnit,
       billAmount,
       purchaseQty,
-      qty,
-      category,
-      // bill,
+      pricePerUnit,
+      threshold
     } = req.body;
 
-    if (
-      !itemName ||
-      !category ||
-      billNo === undefined ||
-      !partyName ||
-      !billDate ||
-      billAmount === undefined ||
-      qty === undefined ||
-      purchaseQty === undefined ||
-      threshold === undefined ||
-      pricePerUnit === undefined
-      // bill === undefined
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: "Bill image is required" });
     }
 
-    // Calculate new quantity by adding purchaseQty to existing qty
-    // const updatedQty = qty + purchaseQty;
+    const billUrl = req.file.path;
 
-    // Set status based on the updated qty
-    const status =
-      updatedQty === 0
-        ? "Out of Stock"
-        : qty < threshold
-        ? "Low Stock"
-        : "Available";
+    // Find or create the category
+    let inventory = await inventoryEntries.findOne({ category });
 
-    let existingCategory = await inventoryEntries.findOne({ category });
+    if (!inventory) {
+      return res.status(404).json({ message: "Category not found. Please create the category first." });
+    }
 
-    if (existingCategory) {
-      await inventoryEntries.updateOne(
-        { category },
-        {
-          $push: {
-            purchaseItems: {
-              itemName,
-              threshold,
-              billNo,
-              partyName,
-              billDate,
-              pricePerUnit,
-              billAmount,
-              purchaseQty,
-              qty: updatedQty,
-              category,
-              status,
-              // bill,
-            },
-          },
-        }
-      );
-      res.status(200).json({ message: "Item added to existing category" });
+    // Find the item
+    let item = inventory.items.find(i => i.name === itemName);
+
+    if (item) {
+      // Update existing item
+      const newQty = item.qty + parseInt(purchaseQty);
+      const status = newQty === 0 ? "Out of Stock" : newQty < item.threshold ? "Low Stock" : "Available";
+
+      const purchaseItem = {
+        billNo,
+        partyName,
+        billDate,
+        billAmount,
+        purchaseQty,
+        qty: newQty,
+        pricePerUnit,
+        status,
+        bill: billUrl,
+      };
+
+      item.qty = newQty;
+      item.status = status;
+      item.purchaseItems = item.purchaseItems || [];
+      item.purchaseItems.push(purchaseItem);
+
     } else {
-      // If category does not exist, create new category and add item
-      const newCategory = new inventoryEntries({
-        category,
-        purchaseItems: {
-          itemName,
-          threshold,
-          billNo,
-          partyName,
-          billDate,
-          pricePerUnit,
-          billAmount,
-          purchaseQty,
-          qty: updatedQty,
-          category,
-          status,
-          // bill,
-        },
-      });
+      // Add new item
+      const newItem = {
+        name: itemName,
+        qty: parseInt(purchaseQty),
+        threshold: parseInt(threshold),
+        status:
+          parseInt(purchaseQty) === 0
+            ? "Out of Stock"
+            : parseInt(purchaseQty) < parseInt(threshold)
+            ? "Low Stock"
+            : "Available",
+        pricePerUnit: parseFloat(pricePerUnit),
+        purchaseItems: [
+          {
+            billNo,
+            partyName,
+            billDate,
+            billAmount,
+            purchaseQty,
+            qty: parseInt(purchaseQty),
+            pricePerUnit,
+            status:
+              parseInt(purchaseQty) === 0
+                ? "Out of Stock"
+                : parseInt(purchaseQty) < parseInt(threshold)
+                ? "Low Stock"
+                : "Available",
+            bill: billUrl,
+          },
+        ],
+      };
 
-      await newCategory.save();
-      res
-        .status(201)
-        .json({ message: "New category created with item", newCategory });
+      inventory.items.push(newItem);
     }
+
+    await inventory.save();
+
+    res.status(200).json({ message: "Purchase added successfully" });
+
   } catch (error) {
     console.error("Error in purchaseInventory:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 export const requestInventoryFaculty = async (req, res) => {
   try {
     const {
