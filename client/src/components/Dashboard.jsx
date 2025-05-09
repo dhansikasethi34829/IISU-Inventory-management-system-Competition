@@ -70,9 +70,9 @@ function Dashboard() {
                   Issued Inventories
                 </li>
               </Link>
-              <Link to="/restock-inventory">
+              {/* <Link to="/restock-inventory">
                 <li className={getNavLinkClass("/restock-inventory")}>Restock Inventory</li>
-              </Link>
+              </Link> */}
               <Link to="/threshold">
                 <li className={getNavLinkClass("/threshold")}>Threshold</li>
               </Link>

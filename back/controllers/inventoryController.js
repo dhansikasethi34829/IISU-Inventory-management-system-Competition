@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import inventoryEntries from "../models/inventoryEntries.js";
 import removedInventory from "../models/removedINV.js";
+import { uploadToCloudinary } from "../services/Cloudinary.js";
 
 export const addInventory = async (req, res) => {
   try {
@@ -50,6 +51,23 @@ export const getInventory = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+export const getPurchaseInventory = async (req, res) => {
+  try {
+    const purchasedInventory = await inventoryEntries.find(
+      {},
+      "category items purchaseItems"
+    );
+    if (!purchasedInventory || purchasedInventory.length === 0) {
+      return res.status(404).json({ message: "No inventory purchased." });
+    }
+
+    res.status(200).json(purchasedInventory);
+  } catch (error) {
+    console.error("Error fetching purchased inventory:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 
 export const purchaseInventory = async (req, res) => {
   try {
@@ -64,12 +82,14 @@ export const purchaseInventory = async (req, res) => {
       pricePerUnit,
       threshold
     } = req.body;
-
-    if (!req.file || !req.file.path) {
-      return res.status(400).json({ message: "Bill image is required" });
+    let billUrl = null;
+    if(req.file){
+      try{
+        billUrl = await uploadToCloudinary(req);
+      }catch(uploadError){
+        console.error("Cloudinary upload error:", uploadError);
+      }
     }
-
-    const billUrl = req.file.path;
 
     // Find or create the category
     let inventory = await inventoryEntries.findOne({ category });

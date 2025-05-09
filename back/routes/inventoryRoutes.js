@@ -11,9 +11,10 @@ import {
   requestInventoryFaculty,
   getViewRequestInventory,
   deleteRequestInventory,
+  getPurchaseInventory,
 } from "../controllers/inventoryController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import upload from "../middlewares/multer.js";
+import upload from "../middlewares/Upload.js";
 const router = express.Router();
 
 router.post(
@@ -46,6 +47,11 @@ router.get(
   "/getIssuedInventory",
   authMiddleware("storemanToken", "adminToken"),
   getIssuedInventory
+);
+router.get(
+  "/getPurchaseInventory",
+  authMiddleware("storemanToken", "adminToken"),
+  getPurchaseInventory
 );
 router.delete(
   "/removeInventory",
