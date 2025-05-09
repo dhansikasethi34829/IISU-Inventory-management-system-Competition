@@ -66,9 +66,12 @@ export const registerFaculty = async (req, res) => {
 //   }
 // };
 
-export const facultyLogOut = async (req, res) => {
-  res.clearCookie('token');
-  res.json({message:'Faculty logged out'})
-  res.status(200).json({message:"Faculty log out successfully"})
+export const facultyLogOut = (req, res) => {
+  try {
+    res.clearCookie("facultyToken");
+    return res.json({ message: "Logout successful" }); 
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" }); 
+  }
 };
-

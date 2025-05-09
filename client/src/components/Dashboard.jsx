@@ -116,6 +116,11 @@ function Dashboard() {
                   View Requests
                 </li>
               </Link>
+              <Link to="/faculty-issue-inventory-table">
+                <li className={getNavLinkClass("/faculty-issue-inventory-table")}>
+                  Issue Inventory 
+                </li>
+              </Link>
             </>
           )}
         </ul>

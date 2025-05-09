@@ -64,9 +64,12 @@ export const registerAdmin = async (req, res) => {
 //   }
 // };
 
-export const adminLogOut = async (req, res) => {
-  res.clearCookie('token');
-  res.json({message:'Admin logged out'})
-  res.status(200).json({message:"Admin log out successfully"})
+export const adminLogOut = (req, res) => {
+  try {
+    res.clearCookie("adminToken");
+    return res.json({ message: "Logout successful" }); 
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" }); 
+  }
 };
-
